@@ -7,7 +7,8 @@ BlackStar is auto-updating, only a very large and intentional Roblox update will
 This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically. Checks will be periodically added as I make them for other projects.
 
 
-Hookcheck
+BlackStar is auto-updating, only a very large and intentional Roblox update will break it. Obviously, any new checks will have to be added manually. 
+This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically. Checks will be periodically added as I make them for other projects.
 
 ```C++
 int hookMessageBox(const char *errTitle, const char* errMsg) {
