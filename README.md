@@ -25,7 +25,7 @@ void overwriteMessageBox() {
     DWORD bkup;
     VirtualProtect((LPVOID)&MessageBoxA, 1, PAGE_EXECUTE_READWRITE, &bkup);
     *(char*)(&MessageBoxA) = 0xE9;
-    *(DWORD*)((DWORD)&MessageBoxA + 1) = ((DWORD)&hookMessageBox - (DWORD)&MessageBoxA) - 5;
+    *(DWORD*)((DWORD)&MessageBoxA+1)=((DWORD)&hookMessageBox-(DWORD)&MessageBoxA)-5;
     VirtualProtect((LPVOID)&MessageBoxA, 1, bkup, &bkup);
 }
  ```
