@@ -7,12 +7,14 @@ BlackStar is auto-updating, only a very large and intentional Roblox update will
 This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically. Checks will be periodically added as I make them for other projects.
 
 
-BlackStar is auto-updating, only a very large and intentional Roblox update will break it. Obviously, any new checks will have to be added manually. 
-This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically. Checks will be periodically added as I make them for other projects.
+
+# Anti-log upload crashes
+
+Roblox uses a WinAPI MessageBox to display a crash message before uploading logs. To circumvent this, you can overwrite the WinAPI MessageBox function to watch when it is called for a roblox crash, then wipes the logs before it can be uploaded.
 
 ```C++
 int hookMessageBox(const char *errTitle, const char* errMsg) {
-    if (errTitle == "Roblox has Crashed") {
+    if (errTitle == "Roblox has crashed.") {
         DWORD logInfo = 0xB316A;
         for (int i = 0; i < 150; i++) {
             VirtualProtect((LPVOID)(logInfo + i), 1, PAGE_EXECUTE_READWRITE, (PDWORD)0x90); //delete logs
