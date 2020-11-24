@@ -1,0 +1,9 @@
+﻿  pch.cpp
+  dllmain.cpp
+C:\Users\thing\source\repos\BlackStar\BlackStar\dllmain.cpp(16,1): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
+C:\Users\thing\source\repos\BlackStar\BlackStar\pch.cpp : message : see previous definition of '_CRT_SECURE_NO_WARNINGS'
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 37 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  BlackStar.vcxproj -> C:\Users\thing\source\repos\BlackStar\Release\BlackStar.dll
