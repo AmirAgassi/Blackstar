@@ -7,7 +7,7 @@ BlackStar is auto-updating, only a very large and intentional Roblox update will
 This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically.
 
 
-```
+```c++
 
 int hookMessageBox(const char *errTitle, const char* errMsg) {
     if (errTitle == "Roblox has Crashed") {
