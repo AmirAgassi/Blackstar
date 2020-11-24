@@ -7,7 +7,6 @@ BlackStar is auto-updating, only a very large and intentional Roblox update will
 This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically. Checks will be periodically added as I make them for other projects.
 
 
-
 # Anti-log upload crashes
 
 Roblox uses a WinAPI MessageBox to display a crash message before uploading logs. To circumvent this, you can overwrite the WinAPI MessageBox function to watch when it is called for a roblox crash, then wipes the logs before it can be uploaded.
