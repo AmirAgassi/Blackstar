@@ -37,10 +37,10 @@ void overwriteMessageBox() {
  Roblox has added a simple check to FindWindowA, so all you need to do is write a NOP to a JNP that runs the check.
  
  ```C++
- void FindWindowA_Bypass(){
+ void bypassFindWindowA() {
 	 DWORD* bkup;
 	 VirtualProtect((LPVOID)&FindWindowA, 1, PAGE_EXECUTE_READWRITE, &bkup);
 	 *(char*)&FindWindowA = 0x90;
-	 VirtualProtect((LPVOID)&FindWindowA, 1, old, &old);
+	 VirtualProtect((LPVOID)&FindWindowA, 1, bkup, &bkup);
 }
 ```
