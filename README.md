@@ -21,14 +21,12 @@ int hookMessageBox(const char *errTitle, const char* errMsg) {
         }
     }
 }
-
-
 void overwriteMessageBox() {
-    DWORD o;
-    VirtualProtect((LPVOID)&MessageBoxA, 1, PAGE_EXECUTE_READWRITE, &o);
+    DWORD bkup;
+    VirtualProtect((LPVOID)&MessageBoxA, 1, PAGE_EXECUTE_READWRITE, &bkup);
     *(char*)(&MessageBoxA) = 0xE9;
     *(DWORD*)((DWORD)&MessageBoxA + 1) = ((DWORD)&hookMessageBox - (DWORD)&MessageBoxA) - 5;
-    VirtualProtect((LPVOID)&MessageBoxA, 1, o, &o);
+    VirtualProtect((LPVOID)&MessageBoxA, 1, bkup, &bkup);
 }
  ```
  
