@@ -405,31 +405,36 @@ bool confirmRetcheckExists(int addr) {
 void setRetcheck(int addr) {
     int retbytes[] = { 0xE8, 0x31, 0xC0, 0x28, 0xFF };
     int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
-
-    cout << "\nsetting retcheck at " << int2hex(end) << endl;
-    DWORD a, b;
-    VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
-
-    *(char*)end = 0x90;
-    VirtualProtect((LPVOID)end, 1, a, &a);
-
-    cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
-}
-
-void restoreRetcheck(int addr) {
-    int retbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
-    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
     if (end == 0) {
-        cout << "\ncannot set retcheck to unfound address" << endl;
-       
-
+        cout << "\ncannot set retcheck to unfound address (cant find call)" << endl;
     }
     else {
         cout << "\nsetting retcheck at " << int2hex(end) << endl;
         DWORD a, b;
         VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
 
-        cout << "unasd";
+        *(char*)end = 0x90;
+        *(char*)(end+1) = 0x90;
+        *(char*)(end+2) = 0x90;
+        *(char*)(end+3) = 0x90;
+        *(char*)(end+4) = 0x90; //work on this
+
+        VirtualProtect((LPVOID)end, 1, a, &a);
+
+        cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
+    }
+}
+
+void restoreRetcheck(int addr) {
+    int retbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+    if (end == 0) {
+        cout << "\ncannot restore retcheck to unfound address (cant find call)" << endl;
+    }
+    else {
+        cout << "\nrestoring retcheck at " << int2hex(end) << endl;
+        DWORD a, b;
+        VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
         *(char*)end = 0xE8;
         VirtualProtect((LPVOID)end, 1, a, &a);
         cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
@@ -446,10 +451,9 @@ int main() {
 
     int state = scriptContext + 56 * 0 + 164 ^ *(DWORD*)(scriptContext + 56 * 0 + 164);
     setRetcheck(aslr(0x1434E30));
+    getfield(state, -10002, "game");
 
-    cout << "retcheck set " << endl;
     restoreRetcheck(aslr(0x1434E30));
-    //getfield(state, -10002, "game");
  
 
     //setcall(retn, 5, (char*)0xE8);
