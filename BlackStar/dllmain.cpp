@@ -234,7 +234,7 @@ typedef int(__cdecl* RPrint)(int, const char*, ...);
 RPrint r_Print = (RPrint)aslr(0x65D8E0);
 
 typedef int(__stdcall* clua_getfield)(int, int, const char*);
-clua_getfield getfield = (clua_getfield)aslr(0x10A4E30); //works
+clua_getfield getfield = (clua_getfield)aslr(0x1434E30); //works
 
 
 
@@ -392,7 +392,7 @@ bool confirmRetcheckExists(int addr) {
     if (end > 1) {
         return true;
     }
-    int antiretbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    int antiretbytes[] = { 0x90, 0x90, 0x90, 0x90, 0x90 };
     end = scanForBytes(aslr(0x1434E30), antiretbytes, 1500);
     if (end > 1) {
         return false;
@@ -411,22 +411,22 @@ void setRetcheck(int addr) {
     else {
         cout << "\nsetting retcheck at " << int2hex(end) << endl;
         DWORD a, b;
-        VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
+        VirtualProtect((LPVOID)end, 5, PAGE_EXECUTE_READWRITE, &a);
 
         *(char*)end = 0x90;
         *(char*)(end+1) = 0x90;
         *(char*)(end+2) = 0x90;
         *(char*)(end+3) = 0x90;
-        *(char*)(end+4) = 0x90; //work on this
+        *(char*)(end+4) = 0x90;
 
-        VirtualProtect((LPVOID)end, 1, a, &a);
+        VirtualProtect((LPVOID)end, 5, a, &a);
 
         cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
     }
 }
 
 void restoreRetcheck(int addr) {
-    int retbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    int retbytes[] = { 0x90, 0x90, 0x90, 0x90, 0x90 };
     int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
     if (end == 0) {
         cout << "\ncannot restore retcheck to unfound address (cant find call)" << endl;
@@ -434,9 +434,13 @@ void restoreRetcheck(int addr) {
     else {
         cout << "\nrestoring retcheck at " << int2hex(end) << endl;
         DWORD a, b;
-        VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
+        VirtualProtect((LPVOID)end, 5, PAGE_EXECUTE_READWRITE, &a);
         *(char*)end = 0xE8;
-        VirtualProtect((LPVOID)end, 1, a, &a);
+        *(char*)(end + 1) = 0x31;
+        *(char*)(end + 2) = 0xC0;
+        *(char*)(end + 3) = 0x28;
+        *(char*)(end + 4) = 0xFF;
+        VirtualProtect((LPVOID)end, 5, a, &a);
         cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
     }
 }
@@ -451,12 +455,10 @@ int main() {
 
     int state = scriptContext + 56 * 0 + 164 ^ *(DWORD*)(scriptContext + 56 * 0 + 164);
     setRetcheck(aslr(0x1434E30));
-    getfield(state, -10002, "game");
+
+    getfield(state, -10002, "_G");
 
     restoreRetcheck(aslr(0x1434E30));
- 
-
-    //setcall(retn, 5, (char*)0xE8);
 
 
     return 1;

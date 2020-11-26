@@ -1,16 +1,22 @@
 ﻿  dllmain.cpp
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(16,1): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\pch.cpp : message : see previous definition of '_CRT_SECURE_NO_WARNINGS'
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(255,13): warning C4101: 'i': unreferenced local variable
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(297,13): warning C4101: 'i': unreferenced local variable
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(316,14): warning C4101: 'b': unreferenced local variable
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(416,23): warning C4309: '=': truncation of constant value
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(413,18): warning C4101: 'b': unreferenced local variable
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(433,23): warning C4309: '=': truncation of constant value
-C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(431,18): warning C4101: 'b': unreferenced local variable
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(16,1): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\pch.cpp : message : see previous definition of '_CRT_SECURE_NO_WARNINGS'
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(255,13): warning C4101: 'i': unreferenced local variable
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(297,13): warning C4101: 'i': unreferenced local variable
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(316,14): warning C4101: 'b': unreferenced local variable
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(416,23): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(417,27): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(418,27): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(419,27): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(420,27): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(413,18): warning C4101: 'b': unreferenced local variable
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(438,23): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(440,29): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(442,29): warning C4309: '=': truncation of constant value
+C:\Users\thing\Documents\GitHub\BlackStar\BlackStar\dllmain.cpp(436,18): warning C4101: 'b': unreferenced local variable
   Generating code
-  12 of 137 functions ( 8.8%) were compiled, the rest were copied from previous compilation.
+  1 of 137 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  BlackStar.vcxproj -> C:\Users\thing\Documents\GitHub\Blackstar\Release\BlackStar.dll
+  BlackStar.vcxproj -> C:\Users\thing\Documents\GitHub\BlackStar\Release\BlackStar.dll
