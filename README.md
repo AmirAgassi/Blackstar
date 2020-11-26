@@ -12,8 +12,7 @@ The project MUST be built in x86 instead of x64 due to raw x86 assembly.
 
 Retcheck in Roblox is a very simple check. Each function with retcheck checks for the address it is returning a value to, then ensures it is in the memory space of Roblox before continuing. If the return address is not in the memory space of Roblox, the function then knows that the function is being called externally, most likely by an exploit, and therefore calls a function that shuts down the client.
 
-![alt text](https://i.gyazo.com/87ebcc9753402722e2fd8c886c4b6a94.png)
-
+![alt text](https://i.gyazo.com/87ebcc9753402722e2fd8c886c4b6a94.png){:height="50%" width="50%"}{:height="50%" width="50%"}
 
 
 
