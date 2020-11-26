@@ -21,7 +21,7 @@ using namespace std;
 
 
 
-
+   
 namespace memory
 {
     bool Compare(const BYTE* pData, const BYTE* bMask, const char* szMask)
