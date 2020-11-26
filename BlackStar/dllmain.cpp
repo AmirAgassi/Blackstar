@@ -22,9 +22,8 @@ using namespace std;
 
 
 
-
-namespace Memory {
-
+namespace memory
+{
     bool Compare(const BYTE* pData, const BYTE* bMask, const char* szMask)
     {
         for (; *szMask; ++szMask, ++pData, ++bMask)
@@ -39,30 +38,26 @@ namespace Memory {
         return 0;
     }
 
-    int Scan(DWORD mode, char* content, char* mask)
+    DWORD scan(char* content)
     {
-        DWORD PageSize;
-        SYSTEM_INFO si;
-        GetSystemInfo(&si);
-        PageSize = si.dwPageSize;
-        MEMORY_BASIC_INFORMATION mi;
-        for (DWORD lpAddr = 0; lpAddr < 0x7FFFFFFF; lpAddr += PageSize)
+        SYSTEM_INFO SystemInfo;
+        GetSystemInfo(&SystemInfo);
+        DWORD PageSize = SystemInfo.dwPageSize;
+        MEMORY_BASIC_INFORMATION meminfo;
+        DWORD Start = (DWORD)SystemInfo.lpMinimumApplicationAddress;
+        DWORD End = (DWORD)SystemInfo.lpMaximumApplicationAddress;
+        for (DWORD lpAddress = Start; lpAddress <= End; lpAddress += PageSize) //tepigs scanner
         {
-            DWORD vq = VirtualQuery((void*)lpAddr, &mi, PageSize);
-            if (vq == ERROR_INVALID_PARAMETER || vq == 0) break;
-            if (mi.Type == MEM_MAPPED) continue;
-            if (mi.Protect == mode)
-            {
-                int addr = FindPattern(lpAddr, PageSize, (PBYTE)content, mask);
-                if (addr != 0)
-                {
-                    return addr;
-                }
+            VirtualQuery((void*)lpAddress, &meminfo, PageSize);
+            if (meminfo.Type == MEM_MAPPED) continue;
+            if (meminfo.Protect == PAGE_READWRITE) {
+                DWORD Address = FindPattern(lpAddress, PageSize, (PBYTE)content, (char*)"xxxx");
+                if (Address != NULL)
+                    return Address;
             }
         }
     }
 }
-
 
 
 
@@ -171,10 +166,10 @@ namespace func {
 
 
 
-
-
-
 void Console(const char* N) {
+
+
+
     AllocConsole();
     SetConsoleTitleA(N);
     freopen("CONOUT$", "w", stdout);
@@ -227,8 +222,10 @@ clua_getglobalstate GetGlobalState = (clua_getglobalstate)addresses::getGlobalSt
 //use scriptcontext offset to find lua_state.
 
 typedef int(__cdecl* clua_gettop)(int a1);
-clua_gettop gettop = (clua_gettop)aslr(0x017258F0); //works
+clua_gettop gettop = (clua_gettop)aslr(0x017258F0); //outdated
 
+typedef int(__cdecl* clua_settop)(int a1);
+clua_settop settop = (clua_settop)aslr(0x11B4E30); //works
 
 typedef int(__cdecl* lua_print)(int, const char*);
 lua_print printx = (lua_print)aslr(0x65D8E0); //works
@@ -236,37 +233,254 @@ lua_print printx = (lua_print)aslr(0x65D8E0); //works
 typedef int(__cdecl* RPrint)(int, const char*, ...);
 RPrint r_Print = (RPrint)aslr(0x65D8E0);
 
+typedef int(__stdcall* clua_getfield)(int, int, const char*);
+clua_getfield getfield = (clua_getfield)aslr(0x10A4E30); //works
+
+
+
+int lua_gettop(unsigned int rL)
+{
+    return (*(DWORD*)(rL + 24) - *(DWORD*)(rL + 12)) >> 4;
+}
+
+
+
+
+int calculate_size(int func_start, int end, int second) {
+    bool keepgoing = true;  int max = 1000;  int amt = 0;
+    if (end == 0) end = 0xC2;
+    while (keepgoing) {
+
+        amt = amt + 1;
+        int i;
+
+        if (((BYTE*)func_start)[0] == end) {
+
+            printf("%d ", ((BYTE*)func_start)[0]);
+
+            if (second != 0) {
+                if (((BYTE*)func_start + 0x1)[0] == second) {
+
+                    printf("%d\r\n\r\n", ((BYTE*)func_start)[1]);
+
+                    printf("Found EOF (%d %d). (%d down from function start.) (0x%d)\r\n", end, second, amt, (func_start));
+                    return func_start;
+                    break;
+                }
+            }
+            else {
+                printf("\r\n\r\nFound EOF (%d). (%d down from function start.) (0x%d)\r\n", end, amt, (func_start));
+                return func_start;
+                break;
+            }
+        }
+
+        else {
+            printf("%d ", ((BYTE*)func_start)[0]);
+        }
+        if (amt > max) {
+            printf("Size calculation failed - function too large.");
+            break;
+        }
+        func_start = func_start + 0x1;
+    }
+}
+
+
+
+
+
+void dump_hex(int func_start, int end) {
+    int amt = 0;
+    while (true) {
+        amt += 1;
+        int i;
+        printf("%d", (func_start));
+        cout << reinterpret_cast<int*>(*(DWORD*)func_start) << endl;
+        if (amt >= end) {
+            printf("Size calculation failed - function too large.");
+            break;
+        }
+        func_start = func_start + 0x1;
+    }
+}
+
+
+
+
+void pushstringcalled(int a, int b, int c) {
+    printf(" Function called.");
+}
+
+void setcall(DWORD x, int d, char* opcode) {
+    DWORD a, b;
+    VirtualProtect((LPVOID)x, d, PAGE_EXECUTE_READWRITE, &a);
+
+    cout << "asd";
+    *(char*)x = *opcode;
+    *(DWORD*)(x + 1) = (DWORD)((char*)pushstringcalled - (char*)(x + 5));
+    VirtualProtect((LPVOID)x, d, a, &a);
+}
+
+char* copyopcode(int d) {
+    return (char*)d;
+}
+
+
+int scanForHexInFunction(int func, int opcode, int data[], int maxsize) {
+
+    int i = 0;
+    while (true) {
+
+        cout << ((BYTE*)func)[0] << endl;
+        func += 0x1;
+        i += 1;
+        if (((BYTE*)func)[0] == opcode) {
+            for (int a = 1; a < sizeof(data); a++) {
+                printf("%d is a", a);
+                if (((BYTE*)func)[a] != data[a - 1]) {
+                    printf("found first opcode but data doesnt match... rip\n");
+                    break;
+                }
+            }
+        }
+        if (i == maxsize) {
+            break;
+        }
+         
+    }
+
+
+
+    return 1;
+
+
+}
+
+string int2hex(int x) {
+    std::stringstream stream;
+    stream << std::hex << std::uppercase << x;
+    std::string result(stream.str());
+    return result;
+}
+
+
+int scanForBytes(int addy, int bytes[], int max) {
+    //printf("%d", addy);
+    int origaddy = addy;
+    for (int a = 1; a < max; a++) {
+        BYTE* add = (BYTE*)(((BYTE*)addy)[0]);
+        int addx = (int)add;
+     //   std::cout << "0x" << addy << ": " << "0x" << std::hex << std::uppercase << addx << '\n';
+        
+        if (addx == 0xC2) {
+           // printf("FOUND END, WTF??? BROKEN GAME SOMETHING WENT WRONG");
+            return 0;
+            break;
+        }
+        if (addx == bytes[0]) {
+            //std::cout << "found first byte: " << "0x" << std::hex << std::uppercase << addx << '\n';
+            
+            int tempaddy = addy;
+            int startaddy = tempaddy;
+            for (int b = 1; b <= sizeof(bytes); b++) {
+                int comp = (int)(BYTE*)(((BYTE*)tempaddy+b)[0]);
+               // cout << "addy is " << comp << endl;
+                //cout << "comparing " << bytes[b] << " to " << comp << endl;
+                if (comp == bytes[b]) {
+                    //cout << "match found, passing on\n";
+                }
+                else
+                {
+                    //printf("broken silicon, moving on");
+                    break;
+                }
+                if (b == sizeof(bytes)) {
+                    std::stringstream stream;
+                    int retaddy = tempaddy;
+                    stream << std::hex << std::uppercase << (int)retaddy;
+                    std::string result(stream.str());
+                    //cout << "acc found at " << result << endl;
+                    //cout << "diff is " << (retaddy - origaddy);
+                    //cout << endl;
+                    return retaddy;
+                }
+            }
+        
+        }
+
+        addy += 1;
+    }
+    return 1;
+}
+
+
+
+bool confirmRetcheckExists(int addr) {
+    int retbytes[] = { 0xE8, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+    if (end > 1) {
+        return true;
+    }
+    int antiretbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    end = scanForBytes(aslr(0x1434E30), antiretbytes, 1500);
+    if (end > 1) {
+        return false;
+    }
+    cout << "CANNOT FIND EITHER, FUNCTION IS MISSING ENABLED/DISABLED RETCHECK." << endl;
+    return false;
+
+}
+
+void setRetcheck(int addr) {
+    int retbytes[] = { 0xE8, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+
+    cout << "\nsetting retcheck at " << int2hex(end) << endl;
+    DWORD a, b;
+    VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
+
+    *(char*)end = 0x90;
+    VirtualProtect((LPVOID)end, 1, a, &a);
+}
+
+void restoreRetcheck(int addr) {
+    int retbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+    if (end == 0) {
+        cout << "\ncannot set retcheck to unfound address" << endl;
+       
+
+    }
+    else {
+        cout << "\nsetting retcheck at " << int2hex(end) << endl;
+        DWORD a, b;
+        VirtualProtect((LPVOID)end, 1, PAGE_EXECUTE_READWRITE, &a);
+
+        cout << "unasd";
+        *(char*)end = 0xE8;
+        VirtualProtect((LPVOID)end, 1, a, &a);
+    }
+}
 
 int main() {
 
-    Console("ScriptWare");
-
-    printf("Saving ReturnCheck Flags... ");
-
-    //savedret1 = *(DWORD*)&retflag1; //retcheck flags sanity check
-    //savedret2 = *(DWORD*)&retflag2;
-    //bypasses::saveRetcheck(); //save retcheck flag value (dynamic each game)
-    r_Print(1, "Hello, world!");
-    //cout << "Ok. Retflag 1: " << savedret1 << ", Retflag 2: " << savedret2 << endl;
-
-    cout << "Testing Retcheck spoofing...";
-
-    //bypasses::overrideRetcheck();
-
-    cout << " Done." << endl << endl;
-
-    cout << "Testing lua C functions...";
-
-    //cout << gettop(0x014058F0) << endl;
-
-    cout << "Done. Finding lua_state... ";
-    //gettop(10000);
+    Console("BlackStar");
 
 
+    int scriptc = aslr(0x01AC94C4);
+    int scriptContext = memory::scan((char*)&scriptc);
 
+    int state = scriptContext + 56 * 0 + 164 ^ *(DWORD*)(scriptContext + 56 * 0 + 164);
+    setRetcheck(aslr(0x1434E30));
 
-    //bypasses::overrideRetcheck();
-    //cout << *(DWORD*)retflag1 << endl << *(DWORD*)retflag2 << endl;
+    cout << "retcheck set " << endl;
+    restoreRetcheck(aslr(0x1434E30));
+    //getfield(state, -10002, "game");
+ 
+
+    //setcall(retn, 5, (char*)0xE8);
+
 
     return 1;
 }
