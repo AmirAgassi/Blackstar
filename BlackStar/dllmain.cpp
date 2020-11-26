@@ -442,6 +442,8 @@ void setRetcheck(int addr) {
 
     *(char*)end = 0x90;
     VirtualProtect((LPVOID)end, 1, a, &a);
+
+    cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
 }
 
 void restoreRetcheck(int addr) {
@@ -460,6 +462,7 @@ void restoreRetcheck(int addr) {
         cout << "unasd";
         *(char*)end = 0xE8;
         VirtualProtect((LPVOID)end, 1, a, &a);
+        cout << "retcheck is: " << confirmRetcheckExists(addr) << endl;
     }
 }
 

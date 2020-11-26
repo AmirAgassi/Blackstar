@@ -1,0 +1,30 @@
+﻿  pch.cpp
+  dllmain.cpp
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(37,16): warning C4312: 'type cast': conversion from 'DWORD' to 'BYTE *' of greater size
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(47,68): warning C4311: 'type cast': pointer truncation from 'LPVOID' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(47,68): warning C4302: 'type cast': truncation from 'LPVOID' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(48,66): warning C4311: 'type cast': pointer truncation from 'LPVOID' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(48,66): warning C4302: 'type cast': truncation from 'LPVOID' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(51,42): warning C4312: 'type cast': conversion from 'DWORD' to 'void *' of greater size
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(75,16): warning C4311: 'type cast': pointer truncation from 'HMODULE' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(75,16): warning C4302: 'type cast': truncation from 'HMODULE' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(76,16): warning C4311: 'type cast': pointer truncation from 'HMODULE' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(76,16): warning C4302: 'type cast': truncation from 'HMODULE' to 'DWORD'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(117,28): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(121,9): error C4235: nonstandard extension used: '__asm' keyword not supported on this architecture
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(122,13): error C2065: 'mov': undeclared identifier
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(122,17): error C2146: syntax error: missing ';' before identifier 'ecx'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(122,17): error C2065: 'ecx': undeclared identifier
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,13): error C2146: syntax error: missing ';' before identifier 'mov'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,13): error C2065: 'mov': undeclared identifier
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,17): error C2146: syntax error: missing ';' before identifier 'eax'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,17): error C2065: 'eax': undeclared identifier
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,27): error C2143: syntax error: missing ']' before '+'
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,27): error C3481: 'ecx': lambda capture variable not found
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(123,27): error C3260: '+': skipping unexpected token(s) before lambda body
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(128,9): error C4235: nonstandard extension used: '__asm' keyword not supported on this architecture
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(130,1): error C3493: 'Instance' cannot be implicitly captured because no default capture mode has been specified
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(130,1): error C3481: 'ecx': lambda capture variable not found
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(139,1): error C3493: 'Instance' cannot be implicitly captured because no default capture mode has been specified
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(139,1): error C3481: 'ecx': lambda capture variable not found
+C:\Users\thing\Documents\GitHub\Blackstar\BlackStar\dllmain.cpp(515,1): fatal error C1004: unexpected end-of-file found
