@@ -6,6 +6,7 @@ The planned bypasses are being made for memcheck, retcheck, hookcheck, FindWindo
 BlackStar is auto-updating, only a very large and intentional Roblox update will break it. Obviously, any new checks will have to be added manually. 
 This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically. Checks will be periodically added as I make them for other projects.
 
+The project MUST be built in x86 instead of x64 due to raw x86 assembly.
 
 # Anti-log upload crashes
 

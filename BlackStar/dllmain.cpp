@@ -327,36 +327,6 @@ char* copyopcode(int d) {
 }
 
 
-int scanForHexInFunction(int func, int opcode, int data[], int maxsize) {
-
-    int i = 0;
-    while (true) {
-
-        cout << ((BYTE*)func)[0] << endl;
-        func += 0x1;
-        i += 1;
-        if (((BYTE*)func)[0] == opcode) {
-            for (int a = 1; a < sizeof(data); a++) {
-                printf("%d is a", a);
-                if (((BYTE*)func)[a] != data[a - 1]) {
-                    printf("found first opcode but data doesnt match... rip\n");
-                    break;
-                }
-            }
-        }
-        if (i == maxsize) {
-            break;
-        }
-         
-    }
-
-
-
-    return 1;
-
-
-}
-
 string int2hex(int x) {
     std::stringstream stream;
     stream << std::hex << std::uppercase << x;
