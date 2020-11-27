@@ -233,8 +233,8 @@ lua_print printx = (lua_print)aslr(0x65D8E0); //works
 typedef int(__cdecl* RPrint)(int, const char*, ...);
 RPrint r_Print = (RPrint)aslr(0x65D8E0);
 
-typedef int(__stdcall* clua_getfield)(int, int, const char*);
-clua_getfield getfield = (clua_getfield)aslr(0x1434E30); //works
+typedef char(__fastcall* clua_getfield)(int, int, const char*);
+clua_getfield getfield = (clua_getfield)aslr(0x014339D0); //works
 
 
 
@@ -445,20 +445,26 @@ void restoreRetcheck(int addr) {
     }
 }
 
+
+
+
+
+
 int main() {
 
     Console("BlackStar");
 
 
-    int scriptc = aslr(0x01AC94C4);
+    int scriptc = aslr(0x01E58300);
     int scriptContext = memory::scan((char*)&scriptc);
 
-    int state = scriptContext + 56 * 0 + 164 ^ *(DWORD*)(scriptContext + 56 * 0 + 164);
-    setRetcheck(aslr(0x1434E30));
+    
 
-    getfield(state, -10002, "_G");
+    int state = ScriptContext + 56 * 0 + 172 - *(DWORD*)(ScriptContext + 56 * 0 + 172);
+    //setRetcheck(aslr(0x1434E30));
+    getfield(aslr(0x01AC9520), -10002, "game");
 
-    restoreRetcheck(aslr(0x1434E30));
+    //restoreRetcheck(aslr(0x1434E30));
 
 
     return 1;
