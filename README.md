@@ -1,5 +1,5 @@
 # BlackStar
-BlackStar is a series of bypasses for all of Roblox's flags and checks. 
+BlackStar is a series of bypasses for all of Roblox's flags and checks, along with detailed and rigorous explanations to aid learning instead of spoonfeeding.
 
 The planned bypasses are being made for memcheck, retcheck, hookcheck, FindWindowA, disabling logs, heartbeat, and VEH. BlackStar is a one-click injectable solution, or can be built into your own personal exploit.
 
