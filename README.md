@@ -46,8 +46,68 @@ int scanForBytes(int addy, int bytes[], int max) {
         addy += 1;
     }
     return 1;
-}```
+}
+```
 
+After you locate the address in memory, you can simply write NOP (0x70) over x - x+5. This wipes the function call from memory, and the function will simply bottom out and return once retcheck has been triggered, as the if statement will simply pass as there is no further operations to complete.
+
+```C++
+bool confirmRetcheckExists(int addr) {
+    int retbytes[] = { 0xE8, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+    if (end > 1) {
+        return true;
+    }
+    int antiretbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    end = scanForBytes(aslr(0x1434E30), antiretbytes, 1500);
+    if (end > 1) {
+        return false;
+    }
+    cout << "CANNOT FIND EITHER, FUNCTION IS MISSING ENABLED/DISABLED RETCHECK." << endl;
+    return false;
+
+}
+
+void setRetcheck(int addr) {
+    int retbytes[] = { 0xE8, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+    if (end == 0) {
+        cout << "\ncannot set retcheck to invalid address" << endl;
+    }
+    else {
+        DWORD a, b;
+        VirtualProtect((LPVOID)end, 5, PAGE_EXECUTE_READWRITE, &a);
+        *(char*)end = 0x90;
+        *(char*)(end+1) = 0x90;
+        *(char*)(end+2) = 0x90;
+        *(char*)(end+3) = 0x90;
+        *(char*)(end+4) = 0x90;
+        VirtualProtect((LPVOID)end, 5, a, &a);
+    }
+}
+```
+
+This code works, but Roblox implements a memory checker that scans certain parts of it's memory space to find unauthorized patches. Since scanning an entire program's takes time, we can get away with patching the bytes in the function, running it, then patching back it's original bytes in order to appear unchanged for when the memory checker finally reaches it. This is a rough memcheck workaround.
+
+```C++
+void restoreRetcheck(int addr) {
+    int retbytes[] = { 0x90, 0x31, 0xC0, 0x28, 0xFF };
+    int end = scanForBytes(aslr(0x1434E30), retbytes, 1500);
+    if (end == 0) {
+        cout << "\ncannot set retcheck to invalid address" << endl;
+    }
+    else {
+        DWORD a, b;
+        VirtualProtect((LPVOID)end, 5, PAGE_EXECUTE_READWRITE, &a);
+        *(char*)end = 0xE8;
+        *(char*)(end + 1) = 0x31;
+        *(char*)(end + 2) = 0xC0;
+        *(char*)(end + 3) = 0x28;
+        *(char*)(end + 4) = 0xFF;
+        VirtualProtect((LPVOID)end, 5, a, &a);
+    }
+}
+```
 
 # Anti-log upload crashes
 
