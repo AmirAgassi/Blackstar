@@ -14,7 +14,7 @@ Retcheck in Roblox is a very simple check. Each function with retcheck checks fo
 
 ![alt text](https://i.gyazo.com/87ebcc9753402722e2fd8c886c4b6a94.png)
 
-To solve this problem, we need to be able to call these functions with retcheck attached, without triggering retcheck. My personal favourite method to solve this issue would be to simply replace the bytes in memory responsible to call the shutdown function after an exploit has been detected with NOP (0x70). This method requires you to find the location of the shutdown function call in memory, which is dynamically placed for each individual function. My solution to this issue is a memory scanner.
+To solve this problem, we need to be able to call these functions with retcheck attached, without triggering retcheck. My personal favourite method to solve this issue would be to simply replace the bytes in memory responsible to call the shutdown function after an exploit has been detected with NOP (0x70). This method requires you to find the location of the shutdown function call in memory, which is dynamically placed for each individual function, and my solution to this issue is a memory scanner.
 
 ```C++
 int scanForBytes(int addy, int bytes[], int max) {
