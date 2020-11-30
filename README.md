@@ -45,7 +45,7 @@ int scanForBytes(int addy, int bytes[], int max) {
         }
         addy += 1;
     }
-    return 1;
+    return 0;
 }
 ```
 
