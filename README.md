@@ -49,7 +49,7 @@ int scanForBytes(int addy, int bytes[], int max) {
 }
 ```
 
-After you locate the address in memory, you can simply write NOP (0x70) over x - x+5. This wipes the function call from memory, and the function will simply bottom out and return once retcheck has been triggered, as the if statement will simply pass as there is no further operations to complete.
+After you locate the address in memory, you can simply write NOP (0x70) over x -> x+5. This wipes the function call from memory, and the function will simply bottom out and return once retcheck has been triggered, as the if statement will simply pass as there is no further operations to complete.
 
 ```C++
 bool confirmRetcheckExists(int addr) {
