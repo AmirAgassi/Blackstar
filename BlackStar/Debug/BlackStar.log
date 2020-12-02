@@ -1,4 +1,0 @@
-﻿  pch.cpp
-  dllmain.cpp
-C:\Users\thing\source\repos\BlackStar\BlackStar\dllmain.cpp(180,5): error C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\thing\source\repos\BlackStar\BlackStar\dllmain.cpp(181,5): error C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
