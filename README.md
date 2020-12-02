@@ -116,7 +116,7 @@ Roblox uses a WinAPI MessageBox to display a crash message before uploading logs
 ```C++
 int hookMessageBox(const char *errTitle, const char* errMsg) {
     if (errTitle == "Roblox has crashed.") {
-        DWORD logInfo = 0xB316A;
+        DWORD logInfo = aslr(0xB316A);
         for (int i = 0; i < 150; i++) {
             VirtualProtect((LPVOID)(logInfo + i), 1, PAGE_EXECUTE_READWRITE, (PDWORD)0x90); //delete logs
         }
