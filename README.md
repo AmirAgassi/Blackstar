@@ -108,7 +108,7 @@ void restoreRetcheck(int addr) {
 }
 ```
 
-# Anti-log upload crashes
+# Anti log-upload crashes
 
 Roblox uses a WinAPI MessageBox to display a crash message before uploading logs. To circumvent this, you can overwrite the WinAPI MessageBox function to watch when it is called for a roblox crash, then wipes the logs before it can be uploaded.
 
