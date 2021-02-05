@@ -124,7 +124,7 @@ void overwriteMessageBox() {
 
  # FindWindowA check
 
- Roblox has added a simple check to FindWindowA, so all you need to do is write a NOP to a JNP that runs the check.
+ Roblox has added a simple check to FindWindowA, so all you need to do is write a NOP to a JNP that runs the check. It's obviously outside of the memory checker's bounds, so no complicated 
 
  ```C++
  void bypassFindWindowA() {
