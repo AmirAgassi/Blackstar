@@ -66,6 +66,41 @@ void restoreRetcheck(BYTE* functionalAddr) {
     }
 }
 ```
+Putting it all together, with a check for restoring the retcheck if provided an already bypassed function to restore, we finally end up with the code below.
+
+```C++
+namespace retcheck {
+
+    int retcheckInstructions[] = { 0x72, 0xA1, 0x8B };
+    int replacementByte = 0xEB;
+
+    void patchRetcheck(BYTE* functionalAddr) {
+        if (functionalAddr[0] == 0x72 && functionalAddr[2] == 0xA1 && functionalAddr[7] == 0x8B) {
+            WriteProcessMemory(GetCurrentProcess(), *(LPVOID*)&functionalAddr, (LPVOID)&replacementByte, 1, NULL);
+        }
+    }
+
+    void restoreRetcheck(BYTE* functionalAddr) {
+        if (functionalAddr[0] == replacementByte && functionalAddr[2] == 0xA1 && functionalAddr[7] == 0x8B) {
+            WriteProcessMemory(GetCurrentProcess(), *(LPVOID*)&functionalAddr, (LPVOID)&retcheckInstructions[0], 1, NULL);
+        }
+    }
+
+    bool checkRetcheck(DWORD addy) {
+        BYTE* functionalAddr = (BYTE*)addy;
+        while (!(functionalAddr[0] == retcheckInstructions[0] && functionalAddr[2] == retcheckInstructions[1] && functionalAddr[7] == retcheckInstructions[2])) {
+            if (functionalAddr[0] == replacementByte && functionalAddr[2] == 0xA1 && functionalAddr[7] == 0x8B) {
+                restoreRetcheck(functionalAddr);
+                return false;
+            }
+            functionalAddr += 1;
+        }
+        patchRetcheck(functionalAddr);
+        return true;
+    }
+}
+```
+
 
 # Anti log-upload crashes
 
