@@ -15,9 +15,7 @@ Retcheck in Roblox is a very simple check. Each function with retcheck checks fo
 
 ![alt text](https://i.gyazo.com/b22b14d1524b483128e7feddcd65ee4f.png)
 
-To solve this problem, we need to be able to call these functions with retcheck attached, without triggering retcheck. 
-
-This method requires you to find the location of the condition checking the return address, and changing the condition to jump away from the shutdown function no matter what. 
+To solve this problem, we need to be able to call these functions with retcheck attached, without triggering retcheck.  
 
 ![](https://i.gyazo.com/34d94757f147c0c1fd0e6582d4d50c67.png)
 
@@ -28,6 +26,11 @@ We can see that the condition uses a JB instruction, and after looking it up in 
 Since we want it to jump regardless of the condition, we can utilize the JMP instruction, which simply jumps no matter what.
 
 ![](https://i.gyazo.com/200d23f612162bfb3f1ad34a90677f62.png)
+
+Now that we have a game plan down to bypass retcheck, we next need to be able to locate the condition in any Lua C function. After studying a few functions with retcheck, I found three bytes that seemed static throughout each implementation, and that was 0x72, 0xA1 2 bytes forward, and 0x8B another 7 bytes forward (relative to the first instruction).
+
+![](https://i.gyazo.com/4067f1c0d5acaffd55eb8c6a564a5fad.png)
+
 
 Although this works, there is still a problem. Roblox's memory checker scans through all of the important segments to make sure none of the memory was altered or patched irregularly. There is one flaw in this system though, and due to the fact that the memory checker has to scan almost the entire program, it will take a good while for it to get to your segment, and we can exploit this. Our new patched JMP instruction in the Lua C function will soon be scanned over by the memory checker and detected, so to avoid this, we will patch back the original byte, restoring the check back and complying with the memory checker all while bypassing the return check.
 
