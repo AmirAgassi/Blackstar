@@ -33,8 +33,6 @@ Now that we have a game plan down to bypass retcheck, we next need to be able to
 
 Now that we have an identifier found, we can start at the top of the function given, and search down until we find 0x72 at the first position, 0xA1 2 bytes forward, and 0x8B 7 bytes forward. Let's write it. 
 
-HOIST
-
 ```C++
 bool bypassRetcheck(DWORD addy) {
     int retcheckInstructions[] = { 0x72, 0xA1, 0x8B };
@@ -66,7 +64,7 @@ void restoreRetcheck(BYTE* functionalAddr) {
     }
 }
 ```
-Putting it all together, with a check for restoring the retcheck if provided an already bypassed function to restore, we finally end up with the code below.
+Putting it all together, with a check for restoring the retcheck if provided an already bypassed function to restore (and hoisting some literals to avoid ugly repetition), we finally end up with the code below.
 
 ```C++
 namespace retcheck {
