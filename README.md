@@ -31,9 +31,41 @@ Now that we have a game plan down to bypass retcheck, we next need to be able to
 
 ![](https://i.gyazo.com/4067f1c0d5acaffd55eb8c6a564a5fad.png)
 
+Now that we have an identifier found, we can start at the top of the function given, and search down until we find 0x72 at the first position, 0xA1 2 bytes forward, and 0x8B 7 bytes forward. Let's write it. 
+
+HOIST
+
+```C++
+bool bypassRetcheck(DWORD addy) {
+    int retcheckInstructions[] = { 0x72, 0xA1, 0x8B };
+    BYTE* functionalAddr = (BYTE*)addy;
+    while (!(functionalAddr[0] == retcheckInstructions[0] && functionalAddr[2] == retcheckInstructions[1] && functionalAddr[7] == retcheckInstructions[2])) {
+        functionalAddr += 1;
+    }
+    patchRetcheck(functionalAddr);
+    return true;
+}
+```
+Next, we can simply use the address pointing to the JB instruction and, after ensuring the identifiers check out, write the replacement byte (our JMP instruction, 0xEB).
+
+```C++
+void patchRetcheck(BYTE* functionalAddr, DWORD addr) {
+    int replacementByte = 0xEB;
+    if (functionalAddr[0] == 0x72 && functionalAddr[2] == 0xA1 && functionalAddr[7] == 0x8B) {
+        WriteProcessMemory(GetCurrentProcess(), *(LPVOID*)&functionalAddr, (LPVOID)&replacementByte, 1, NULL);
+    }
+}
+```
 
 Although this works, there is still a problem. Roblox's memory checker scans through all of the important segments to make sure none of the memory was altered or patched irregularly. There is one flaw in this system though, and due to the fact that the memory checker has to scan almost the entire program, it will take a good while for it to get to your segment, and we can exploit this. Our new patched JMP instruction in the Lua C function will soon be scanned over by the memory checker and detected, so to avoid this, we will patch back the original byte, restoring the check back and complying with the memory checker all while bypassing the return check.
 
+```C++
+void restoreRetcheck(BYTE* functionalAddr) {
+    if (functionalAddr[0] == replacementByte && functionalAddr[2] == 0xA1 && functionalAddr[7] == 0x8B) {
+        WriteProcessMemory(GetCurrentProcess(), *(LPVOID*)&functionalAddr, (LPVOID)&retcheckInstructions[0], 1, NULL);
+    }
+}
+```
 
 # Anti log-upload crashes
 
