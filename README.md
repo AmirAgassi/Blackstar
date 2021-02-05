@@ -7,7 +7,7 @@ The planned bypasses are being made for memcheck, retcheck, hookcheck, FindWindo
 ~~This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically.~~
 I am too lazy to do that. Have a field day with the IDA Pro decompiler you obviously pirated.
 
-The project MUST be built in x86 due to raw x86 assembly.
+~~The project MUST be built in x86.
 
 # Retcheck (return check)
 
