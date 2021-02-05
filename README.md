@@ -84,7 +84,7 @@ namespace retcheck {
         }
     }
 
-    bool checkRetcheck(DWORD addy) {
+    bool bypassRetcheck(DWORD addy) {
         BYTE* functionalAddr = (BYTE*)addy;
         while (!(functionalAddr[0] == retcheckInstructions[0] && functionalAddr[2] == retcheckInstructions[1] && functionalAddr[7] == retcheckInstructions[2])) {
             if (functionalAddr[0] == replacementByte && functionalAddr[2] == 0xA1 && functionalAddr[7] == 0x8B) {
