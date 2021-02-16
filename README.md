@@ -5,7 +5,7 @@ The planned bypasses are being made for memcheck, retcheck, hookcheck, FindWindo
 
 ~~BlackStar is auto-updating, only a very large and intentional Roblox update will break it.~~
 ~~This is achieved by scanning Roblox's memory for arrays of bytes to locate addresses dynamically.~~
-I am too lazy to do that. Have a field day with the IDA Pro decompiler you obviously pirated.
+I am too lazy to do that. Have a field day with the IDA Pro decompiler you pirated.
 
 ~~The project MUST be built in x86.~~
 
